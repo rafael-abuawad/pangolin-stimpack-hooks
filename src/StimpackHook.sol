@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import {BaseHook} from "v4-periphery/src/base/hooks/BaseHook.sol";
-
 import {Hooks} from "v4-core/src/libraries/Hooks.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 import {PoolKey} from "v4-core/src/types/PoolKey.sol";
@@ -10,18 +9,33 @@ import {PoolId, PoolIdLibrary} from "v4-core/src/types/PoolId.sol";
 import {BalanceDelta} from "v4-core/src/types/BalanceDelta.sol";
 import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "v4-core/src/types/BeforeSwapDelta.sol";
 import {Owned} from "solmate/src/auth/Owned.sol";
-import {PointsToken} from "./tokens/PointsToken.sol";
+import {Token} from "./tokens/Token.sol";
 
-contract PointsHook is BaseHook, Owned {
+contract StimpackHook is BaseHook, Owned {
     using PoolIdLibrary for PoolKey;
 
-    error PointsHook__AlreadyInitialized();
-    error PointsHook__NotInitialized();
+    error StimpackHook__NoBalance();
+    error StimpackHook__AlreadyInitialized();
+    error StimpackHook__NotInitialized();
 
-    PointsToken public pointsToken;
+    Token _token;
     bool _initialized;
 
     constructor(IPoolManager _poolManager) BaseHook(_poolManager) Owned(msg.sender) {}
+
+    modifier hasBalance() {
+        if (_token.balanceOf(address(this)) > 0) {
+            revert StimpackHook__NoBalance();
+        }
+        _;
+    }
+
+    modifier isInitialized() {
+        if (!_initialized) {
+            revert StimpackHook__NotInitialized();
+        }
+        _;
+    }
 
     function getHookPermissions() public pure override returns (Hooks.Permissions memory) {
         return Hooks.Permissions({
@@ -50,11 +64,19 @@ contract PointsHook is BaseHook, Owned {
         return abi.decode(data, (address));
     }
 
+    function initialize(address tokenAddress) external onlyOwner {
+        if (_initialized) {
+            revert StimpackHook__AlreadyInitialized();
+        }
+        _token = Token(tokenAddress);
+        _initialized = true;
+    }
+
     function initialize(string memory name, string memory symbol) external onlyOwner {
         if (_initialized) {
-            revert PointsHook__AlreadyInitialized();
+            revert StimpackHook__AlreadyInitialized();
         }
-        pointsToken = new PointsToken(name, symbol);
+        _token = new Token(name, symbol);
         _initialized = true;
     }
 
@@ -64,11 +86,7 @@ contract PointsHook is BaseHook, Owned {
         IPoolManager.SwapParams calldata swapParams,
         BalanceDelta delta,
         bytes calldata hookData
-    ) external override returns (bytes4, int128) {
-        if (!_initialized) {
-            revert PointsHook__NotInitialized();
-        }
-
+    ) external override hasBalance isInitialized returns (bytes4, int128) {
         // We only award points in the AVAX/<TOKEN> pools.
         if (!key.currency0.isAddressZero()) {
             return (BaseHook.afterSwap.selector, 0);
@@ -98,11 +116,7 @@ contract PointsHook is BaseHook, Owned {
         BalanceDelta delta,
         BalanceDelta,
         bytes calldata hookData
-    ) external override returns (bytes4, BalanceDelta) {
-        if (!_initialized) {
-            revert PointsHook__NotInitialized();
-        }
-
+    ) external override hasBalance isInitialized returns (bytes4, BalanceDelta) {
         // We only award points in the AVAX/<TOKEN> pools.
         if (!key.currency0.isAddressZero()) {
             return (BaseHook.afterAddLiquidity.selector, delta);
@@ -124,6 +138,10 @@ contract PointsHook is BaseHook, Owned {
     }
 
     function _awardPoints(address to, uint256 amount) internal {
-        pointsToken.mint(to, _getPointsForAmount(amount));
+        _token.mint(to, _getPointsForAmount(amount));
+    }
+
+    function token() public view returns (address) {
+        return address(_token);
     }
 }

@@ -14,7 +14,6 @@ import {MockERC20} from "solmate/src/test/utils/mocks/MockERC20.sol";
 import {Constants} from "v4-core/src/../test/utils/Constants.sol";
 import {TickMath} from "v4-core/src/libraries/TickMath.sol";
 import {CurrencyLibrary, Currency} from "v4-core/src/types/Currency.sol";
-import {PointsHook} from "../src/PointsHook.sol";
 import {HookMiner} from "../test/utils/HookMiner.sol";
 import {IPositionManager} from "v4-periphery/src/interfaces/IPositionManager.sol";
 import {PositionManager} from "v4-periphery/src/PositionManager.sol";
@@ -23,10 +22,12 @@ import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol"
 import {DeployPermit2} from "../test/utils/forks/DeployPermit2.sol";
 import {IERC20} from "forge-std/interfaces/IERC20.sol";
 import {IPositionDescriptor} from "v4-periphery/src/interfaces/IPositionDescriptor.sol";
+import {StimpackHook} from "../src/StimpackHook.sol";
+import {Factory} from "../src/Factory.sol";
 
 /// @notice Forge script for deploying v4 & hooks to **anvil**
 /// @dev This script only works on an anvil RPC because v4 exceeds bytecode limits
-contract PointsHookScript is Script, DeployPermit2 {
+contract StimpackHookScript is Script, DeployPermit2 {
     using EasyPosm for IPositionManager;
 
     address constant CREATE2_DEPLOYER = address(0x4e59b44847b379578588920cA78FbF26c0B4956C);
@@ -44,15 +45,9 @@ contract PointsHookScript is Script, DeployPermit2 {
         );
 
         // Mine a salt that will produce a hook address with the correct permissions
-        (address hookAddress, bytes32 salt) =
-            HookMiner.find(CREATE2_DEPLOYER, permissions, type(PointsHook).creationCode, abi.encode(address(manager)));
-
-        // ----------------------------- //
-        // Deploy the hook using CREATE2 //
-        // ----------------------------- //
-        vm.broadcast();
-        PointsHook counter = new PointsHook{salt: salt}(manager);
-        require(address(counter) == hookAddress, "PointsHookScript: hook address mismatch");
+        (address hookAddress, bytes32 salt) = HookMiner.find(
+            CREATE2_DEPLOYER, permissions, type(StimpackHook).creationCode, abi.encode(address(manager))
+        );
 
         // Additional helpers for interacting with the pool
         vm.startBroadcast();
@@ -60,9 +55,9 @@ contract PointsHookScript is Script, DeployPermit2 {
         (PoolModifyLiquidityTest lpRouter, PoolSwapTest swapRouter,) = deployRouters(manager);
         vm.stopBroadcast();
 
-        // test the lifecycle (create pool, add liquidity, swap)
+        // Deploy the factory
         vm.startBroadcast();
-        testLifecycle(manager, address(counter), posm, lpRouter, swapRouter);
+        Factory factory = new Factory(manager);
         vm.stopBroadcast();
     }
 

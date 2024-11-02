@@ -6,11 +6,11 @@ import {Hooks} from "v4-core/src/libraries/Hooks.sol";
 import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 
 import {Constants} from "./base/Constants.sol";
-import {PointsHook} from "../src/PointsHook.sol";
+import {StimpackHook} from "../src/StimpackHook.sol";
 import {HookMiner} from "../test/utils/HookMiner.sol";
 
-/// @notice Mines the address and deploys the PointsHook.sol Hook contract
-contract PointsHookScript is Script, Constants {
+/// @notice Mines the address and deploys the StimpackHook.sol Hook contract
+contract StimpackHookScript is Script, Constants {
     function setUp() public {}
 
     function run() public {
@@ -23,11 +23,11 @@ contract PointsHookScript is Script, Constants {
         // Mine a salt that will produce a hook address with the correct flags
         bytes memory constructorArgs = abi.encode(POOLMANAGER);
         (address hookAddress, bytes32 salt) =
-            HookMiner.find(CREATE2_DEPLOYER, flags, type(PointsHook).creationCode, constructorArgs);
+            HookMiner.find(CREATE2_DEPLOYER, flags, type(StimpackHook).creationCode, constructorArgs);
 
         // Deploy the hook using CREATE2
         vm.broadcast();
-        PointsHook counter = new PointsHook{salt: salt}(IPoolManager(POOLMANAGER));
-        require(address(counter) == hookAddress, "PointsHookScript: hook address mismatch");
+        StimpackHook counter = new StimpackHook{salt: salt}(IPoolManager(POOLMANAGER));
+        require(address(counter) == hookAddress, "StimpackHookScript: hook address mismatch");
     }
 }

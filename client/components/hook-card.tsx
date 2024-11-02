@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
@@ -29,7 +30,13 @@ export default function HookCard({
 
           {/* Card Art */}
           <div className="relative mb-2 h-96 overflow-hidden rounded-lg">
-            <img className="object-cover h-96 w-full lg:max-w-96" src={image} />
+            <Image
+              className="object-cover h-96 w-full lg:max-w-96"
+              src={image}
+              width={384}
+              height={384}
+              alt="card artwork"
+            />
           </div>
 
           {/* Card Title Banner */}

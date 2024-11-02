@@ -1,10 +1,17 @@
 "use client";
-import HookCard from "@/components/hook-card";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ConnectKitButton } from "connectkit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import HookCard from "@/components/hook-card";
+import NoWallet from "@/components/no-wallet";
+import Loading from "@/components/loading";
+import { useAccount } from "wagmi";
+import localFont from "next/font/local";
+
+const fiftiesFont = localFont({ src: "../lib/fonts/fifties.ttf" });
 
 const cards = [
   {
@@ -45,6 +52,24 @@ const cards = [
 ];
 
 export default function Home() {
+  const { isConnected, address } = useAccount();
+
+  if (!isConnected) {
+    return (
+      <>
+        <main className="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto">
+          <div className="w-full grid gap-4 grid-cols-1 max-w-7xl">
+            <NoWallet />
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  if (!address) {
+    return <Loading />;
+  }
+
   return (
     <div className="space-y-6 p-10 pb-16">
       <div className="flex justify-between items-center">
@@ -54,7 +79,9 @@ export default function Home() {
             <AvatarFallback>PSH</AvatarFallback>
           </Avatar>
           <hgroup className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2
+              className={`${fiftiesFont.className} text-2xl font-bold tracking-tight`}
+            >
               Stimpack Hooks
             </h2>
             <h3 className="hidden lg:block text-muted-foreground">

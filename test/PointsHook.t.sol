@@ -11,8 +11,8 @@ import {BalanceDelta} from "v4-core/src/types/BalanceDelta.sol";
 import {PoolId, PoolIdLibrary} from "v4-core/src/types/PoolId.sol";
 import {CurrencyLibrary, Currency} from "v4-core/src/types/Currency.sol";
 import {PoolSwapTest} from "v4-core/src/test/PoolSwapTest.sol";
-import {PointsHook} from "../src/PointsHook.sol";
-import {PointsToken} from "../src/tokens/PointsToken.sol";
+import {StimpackHook} from "../src/StimpackHook.sol";
+import {Token} from "../src/tokens/Token.sol";
 import {StateLibrary} from "v4-core/src/libraries/StateLibrary.sol";
 
 import {LiquidityAmounts} from "v4-core/test/utils/LiquidityAmounts.sol";
@@ -20,12 +20,12 @@ import {IPositionManager} from "v4-periphery/src/interfaces/IPositionManager.sol
 import {EasyPosm} from "./utils/EasyPosm.sol";
 import {Fixtures} from "./utils/Fixtures.sol";
 
-contract PointsHookTest is Test, Fixtures {
+contract StimpackHookTest is Test, Fixtures {
     using EasyPosm for IPositionManager;
     using StateLibrary for IPoolManager;
 
-    PointsHook hook;
-    PointsToken pointsToken;
+    StimpackHook hook;
+    Token pointsToken;
     PoolId poolId;
 
     uint256 tokenId;
@@ -44,9 +44,9 @@ contract PointsHookTest is Test, Fixtures {
             uint160(Hooks.AFTER_SWAP_FLAG | Hooks.AFTER_ADD_LIQUIDITY_FLAG) ^ (0x4444 << 144) // Namespace the hook to avoid collisions
         );
         bytes memory constructorArgs = abi.encode(manager); //Add all the necessary constructor arguments from the hook
-        deployCodeTo("PointsHook.sol:PointsHook", constructorArgs, flags);
-        hook = PointsHook(flags);
-        pointsToken = hook.pointsToken();
+        deployCodeTo("StimpackHook.sol:StimpackHook", constructorArgs, flags);
+        hook = StimpackHook(flags);
+        pointsToken = Token(hook.token());
 
         // Create the pool
         key = PoolKey(Currency.wrap(address(0)), currency1, 3000, 60, IHooks(hook));
@@ -79,7 +79,7 @@ contract PointsHookTest is Test, Fixtures {
         );
     }
 
-    function test_PointsHook_Swap() public {
+    function test_StimpackHook_Swap() public {
         // We already have some points because we added some liquidity during setup.
         // So, we'll subtract those from the total points to get the points awarded for this swap.
         uint256 startingPoints = pointsToken.balanceOf(address(this));
@@ -98,7 +98,7 @@ contract PointsHookTest is Test, Fixtures {
         );
     }
 
-    function test_PointsHook_Liquidity() public {
+    function test_StimpackHook_Liquidity() public {
         // We already have some points because we added some liquidity during setup.
         // So, we'll subtract those from the total points to get the points awarded for this swap.
         uint256 startingPoints = pointsToken.balanceOf(address(this));
