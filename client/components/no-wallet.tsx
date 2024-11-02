@@ -18,10 +18,7 @@ export default function NoWallet() {
       <Card className="text-center w-full h-full flex flex-col justify-center items-center border-none">
         <CardHeader>
           <CardTitle>Please, connect your wallet</CardTitle>
-          <CardDescription>
-            Please connect your wallet to see your supplies, health factor, open
-            positions and balance.
-          </CardDescription>
+          <CardDescription>Please connect your wallet.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center flex-row items-center space-x-2">

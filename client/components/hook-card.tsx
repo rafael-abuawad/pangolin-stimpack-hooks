@@ -1,17 +1,170 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "./ui/checkbox";
+import { useState } from "react";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { FactoryConfig } from "@/lib/contracts/factory.contract";
+import { Tag } from "@/lib/types/tag.enum";
+
+export function DeployButton({
+  disabled,
+  description,
+  tag
+}: {
+  disabled: boolean;
+  description: string;
+  tag: Tag
+}) {
+  const [isExistingToken, setIsExistingToken] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [symbol, setSymbol] = useState("");
+  const [addr, setAddr] = useState("");
+  const { data: hash, isPending, writeContract } = useWriteContract();
+
+  async function submit() {
+    if (isExistingToken) {
+      await submitHookExisting();
+    } else {
+      await submitHookNew();
+    }
+  }
+
+  async function submitHookNew() {
+    if (name.trim() === "" || symbol.trim() === "") {
+      return;
+    }
+
+    writeContract({
+      ...FactoryConfig,
+      functionName: "createHookNew",
+      args: [name, symbol, tag],
+    });
+  }
+
+  async function submitHookExisting() {
+    if (addr.trim() === "" || !addr.startsWith("0x")) {
+      return;
+    }
+
+    writeContract({
+      ...FactoryConfig,
+      functionName: "createHookExisting",
+      args: [addr as `0x${string}`, tag],
+    });
+  }
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" className="w-full" disabled={disabled}>
+          Deploy
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Deploy Hook</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-5 items-center gap-4">
+            <Label htmlFor="username" className="text-right col-span-2">
+              Existing token
+            </Label>
+            <Checkbox
+              onClick={() => setIsExistingToken(!isExistingToken)}
+              checked={isExistingToken}
+            />
+          </div>
+          {isExistingToken && (
+            <div className="grid grid-cols-5 items-center gap-4">
+              <Label htmlFor="tokenAddress" className="text-right col-span-2">
+                Token address
+              </Label>
+              <Input
+                id="tokenAddress"
+                placeholder="0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+                className="col-span-3"
+                onChange={(e) => setAddr(e.target.value)}
+                value={addr}
+              />
+            </div>
+          )}
+
+          {!isExistingToken && (
+            <>
+              <div className="grid grid-cols-5 items-center gap-4">
+                <Label htmlFor="name" className="text-right col-span-2">
+                  Token Name
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="Hook Token"
+                  className="col-span-3"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                />
+              </div>
+              <div className="grid grid-cols-5 items-center gap-4">
+                <Label htmlFor="symbol" className="text-right col-span-2">
+                  Token Symbol
+                </Label>
+                <Input
+                  id="symbol"
+                  placeholder="TKN"
+                  className="col-span-3"
+                  onChange={(e) => setSymbol(e.target.value)}
+                  value={symbol}
+                  maxLength={5}
+                />
+              </div>
+            </>
+          )}
+        </div>
+        <DialogFooter>
+          <Button onClick={() => submit()} disabled={isPending}>
+            {isPending ? "Confirming..." : "Deploy"}{" "}
+          </Button>
+          {isConfirming && <div>Waiting for confirmation...</div>}
+          {isConfirmed && <div>Transaction confirmed.</div>}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function HookCard({
   title,
   image,
   description,
   disabled,
+  tag
 }: {
   title: string;
   image: string;
   description: string;
   disabled: boolean;
+  tag: Tag
 }) {
   return (
     <Card
@@ -58,9 +211,7 @@ export default function HookCard({
 
           {/* Card Type */}
           <div className="mt-2 text-center text-sm font-semibold text-stone-400">
-            <Button variant="ghost" className="w-full" disabled={disabled}>
-              Deploy
-            </Button>
+            <DeployButton tag={tag} description={description} disabled={disabled} />
           </div>
         </div>
       </CardContent>

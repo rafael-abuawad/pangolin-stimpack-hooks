@@ -10,6 +10,7 @@ import NoWallet from "@/components/no-wallet";
 import Loading from "@/components/loading";
 import { useAccount } from "wagmi";
 import localFont from "next/font/local";
+import { Tag } from "@/lib/types/tag.enum";
 
 const fiftiesFont = localFont({ src: "../lib/fonts/fifties.ttf" });
 
@@ -20,6 +21,7 @@ const cards = [
       "Reward users with points for providing liquidity or making swaps, encouraging more engagement and activity.",
     image: "/images/icons/Engineer_24.png",
     disabled: false,
+    tag: Tag.Points
   },
   {
     title: "Existing Points Hook",
@@ -27,6 +29,7 @@ const cards = [
       "Integrate with an existing points system to reward users. Users are responsible for maintaining the points balance.",
     image: "/images/icons/Engineer_25.png",
     disabled: false,
+    tag: Tag.ExistingPoints
   },
   {
     title: "Token Hook",
@@ -34,6 +37,7 @@ const cards = [
       "Offer token rewards for liquidity provision or swaps, giving users a tangible incentive to participate.",
     image: "/images/icons/Engineer_8.png",
     disabled: false,
+    tag: Tag.Token
   },
   {
     title: "Existing Token Hook",
@@ -41,6 +45,7 @@ const cards = [
       "Use an existing token or NFT to incentivize users. It's the user’s responsibility to keep the token balance funded.",
     image: "/images/icons/Engineer_11.png",
     disabled: false,
+    tag: Tag.ExistingToken
   },
   {
     title: "Dynamic Fees Hook",
@@ -48,6 +53,7 @@ const cards = [
       "Adjust fees dynamically based on market conditions or activity levels, optimizing for liquidity and trading volume.",
     image: "/images/icons/Engineer_16.png",
     disabled: true,
+    tag: Tag.Points
   },
 ];
 
@@ -106,7 +112,7 @@ export default function Home() {
             <TabsTrigger value="my-hooks">My Hooks</TabsTrigger>
           </TabsList>
           <TabsContent value="hooks">
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 place-items-center">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center">
               {cards.map((card, i) => (
                 <HookCard
                   key={i}
@@ -114,6 +120,7 @@ export default function Home() {
                   image={card.image}
                   description={card.description}
                   disabled={card.disabled}
+                  tag={card.tag}
                 />
               ))}
             </div>
@@ -129,6 +136,7 @@ export default function Home() {
                     image={card.image}
                     description={card.description}
                     disabled={card.disabled}
+                    tag={card.tag}
                   />
                 ))}
             </div>
