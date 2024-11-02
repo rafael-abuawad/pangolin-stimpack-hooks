@@ -1,6 +1,14 @@
-### **Pangolin Stimpack Hooks**
+# **Pangolin Stimpack Hooks**
 
 **Pangolin Stimpack Hooks** is a set of hooks designed to incentivize liquidity and trading on Pangolin DEX. This project empowers both developers and regular users to create DeFi applications with an engaging, gamified interface. Built for Pangolin’s upcoming V3, these hooks allow easy integration and user engagement without requiring complex setup.
+
+The system consists of two main contracts:
+1. `StimpackHook.sol`: The most basic hook for providing liqudity and volume incentives.
+2. `Factory.sol`: The factory, wich manages the deployments of the hooks, and so on.
+
+![Screenshot 2024-11-02 at 16-06-47 Create Next App](https://github.com/user-attachments/assets/e9f14531-e04f-4222-bf79-0f2788255d07)
+![Screenshot 2024-11-02 at 16-07-15 Create Next App](https://github.com/user-attachments/assets/99d709fd-221e-4f6f-98b5-0a44eb233f32)
+![Screenshot 2024-11-02 at 16-07-23 Create Next App](https://github.com/user-attachments/assets/59c7ab74-33f1-44d4-ab44-439aedddaba7)
 
 ## **Table of Contents**
 - [Introduction](#introduction)
@@ -61,6 +69,8 @@ Developing for an unreleased protocol posed unique challenges. However, this pro
    forge build
    forge deploy
    ```
+## **Notice**
+This is work in progress.
 
 ## **License**
 This project is licensed under the MIT License.
