@@ -1,10 +1,10 @@
 # **Pangolin Stimpack Hooks**
 
-**Pangolin Stimpack Hooks** is a set of hooks designed to incentivize liquidity and trading on Pangolin DEX. This project empowers both developers and regular users to create DeFi applications with an engaging, gamified interface. Built for Pangolin’s upcoming V3, these hooks allow easy integration and user engagement without requiring complex setup.
+**Pangolin Stimpack Hooks** is a user-friendly web application designed to make it easy for anyone to create, deploy, and manage their own Pangolin V3 Hooks. With a simple, gamified interface, users can build hooks focused on boosting liquidity and incentivizing participation on Pangolin DEX, all without needing a complex setup. Currently, Stimpack Hooks offers four core hooks, each geared toward driving liquidity and encouraging both liquidity providers and traders to engage.
 
-The system consists of two main contracts:
-1. `StimpackHook.sol`: The most basic hook for providing liqudity and volume incentives.
-2. `Factory.sol`: The factory, wich manages the deployments of the hooks, and so on.
+The system consists of two main components:
+1. `StimpackHook.sol`: The basic hook contract that provides liquidity and volume incentives.
+2. `Factory.sol`: A factory contract that manages the deployment and organization of individual hooks.
 
 ![Screenshot 2024-11-02 at 16-06-47 Create Next App](https://github.com/user-attachments/assets/e9f14531-e04f-4222-bf79-0f2788255d07)
 ![Screenshot 2024-11-02 at 16-07-15 Create Next App](https://github.com/user-attachments/assets/99d709fd-221e-4f6f-98b5-0a44eb233f32)
@@ -22,23 +22,23 @@ The system consists of two main contracts:
 - [License](#license)
 
 ## **Introduction**
-The **Pangolin Stimpack Hooks** project is inspired by Pangolin DEX’s role as the first decentralized exchange on Avalanche and the upcoming features in Pangolin V3. Hooks offer an innovative way to extend DeFi functionality by enabling applications that don’t require initial liquidity or user acquisition from scratch. With a growing catalog, this project can become a valuable tool for both users and entrepreneurs.
+The **Pangolin Stimpack Hooks** project is inspired by Pangolin DEX’s pioneering role on Avalanche and the upcoming features in Pangolin V3. Stimpack Hooks provides a versatile and straightforward way for users, whether developers or not, to create DeFi hooks with minimal technical requirements. The initial four hooks focus on jumpstarting liquidity and user engagement, with plans to expand as the protocol grows.
 
 ## **Key Features**
-- **Hook Simplicity**: A streamlined set of hooks for developers, lowering the barrier to entry for creating DeFi applications.
-- **Gamified User Interface**: Interactive elements make the experience engaging and intuitive, suitable for users with varying technical backgrounds.
-- **Empowerment Through Accessibility**: Allows non-developers to create and deploy hooks, promoting innovation within the community.
+- **Simple Hook Creation**: A straightforward process allows anyone to create and deploy hooks to Pangolin DEX.
+- **Gamified Interface**: Engaging, interactive elements make it easy to navigate and use, making DeFi accessible to a wider audience.
+- **Empowering DeFi Innovation**: Non-developers can create and manage hooks, encouraging innovation and experimentation within the community.
 
 ## **How It Works**
 
 ### **Hooks Overview**
-The hooks are designed to simplify the development process for applications on Pangolin DEX. By removing the need to bootstrap liquidity or attract users, developers can focus on building their core applications without the typical overhead.
+Stimpack Hooks simplifies the development of liquidity-boosting applications on Pangolin DEX. With no need for extensive user acquisition or liquidity bootstrapping, anyone can easily deploy hooks to support DeFi activity on Pangolin.
 
 ### **Gamified Interface**
-The user interface introduces gamified elements, making it not only functional but also fun and intuitive. With an extensive catalog of hooks, users can easily explore and select those that fit their needs, while entrepreneurs have a powerful tool for creating user-friendly DeFi solutions.
+The gamified UI makes creating hooks both functional and fun. Users can browse and select from the catalog of hooks, focusing on liquidity incentives and engagement while enjoying an intuitive, game-like experience.
 
 ## **Challenges**
-Developing for an unreleased protocol posed unique challenges. However, this project serves as a functional MVP that will seamlessly integrate with Pangolin V3 once it’s ready for production.
+The project presented unique challenges in preparing for integration with Pangolin’s upcoming V3. However, this application serves as a robust MVP designed to seamlessly operate with Pangolin V3 upon its release.
 
 ## **Technologies**
 - **Solidity**
@@ -69,8 +69,9 @@ Developing for an unreleased protocol posed unique challenges. However, this pro
    forge build
    forge deploy
    ```
+
 ## **Notice**
-This is work in progress.
+This is a work in progress.
 
 ## **License**
 This project is licensed under the MIT License.
