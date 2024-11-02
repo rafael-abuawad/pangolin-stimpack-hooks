@@ -51,7 +51,7 @@ contract Factory {
         return _hooks[creator];
     }
 
-    function tag(address hook) public view returns (Tag) {
+    function hookTag(address hook) public view returns (Tag) {
         return _hookTags[StimpackHook(hook)];
     }
 }

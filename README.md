@@ -1,96 +1,66 @@
-# v4-template
-### **A template for writing Uniswap v4 Hooks 🦄**
+### **Pangolin Stimpack Hooks**
 
-[`Use this Template`](https://github.com/uniswapfoundation/v4-template/generate)
+**Pangolin Stimpack Hooks** is a set of hooks designed to incentivize liquidity and trading on Pangolin DEX. This project empowers both developers and regular users to create DeFi applications with an engaging, gamified interface. Built for Pangolin’s upcoming V3, these hooks allow easy integration and user engagement without requiring complex setup.
 
-1. The example hook [Counter.sol](src/Counter.sol) demonstrates the `beforeSwap()` and `afterSwap()` hooks
-2. The test template [Counter.t.sol](test/Counter.t.sol) preconfigures the v4 pool manager, test tokens, and test liquidity.
+## **Table of Contents**
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+  - [Hooks Overview](#hooks-overview)
+  - [Gamified Interface](#gamified-interface)
+- [Challenges](#challenges)
+- [Technologies](#technologies)
+- [Setup](#setup)
+- [License](#license)
 
-<details>
-<summary>Updating to v4-template:latest</summary>
+## **Introduction**
+The **Pangolin Stimpack Hooks** project is inspired by Pangolin DEX’s role as the first decentralized exchange on Avalanche and the upcoming features in Pangolin V3. Hooks offer an innovative way to extend DeFi functionality by enabling applications that don’t require initial liquidity or user acquisition from scratch. With a growing catalog, this project can become a valuable tool for both users and entrepreneurs.
 
-This template is actively maintained -- you can update the v4 dependencies, scripts, and helpers: 
-```bash
-git remote add template https://github.com/uniswapfoundation/v4-template
-git fetch template
-git merge template/main <BRANCH> --allow-unrelated-histories
-```
+## **Key Features**
+- **Hook Simplicity**: A streamlined set of hooks for developers, lowering the barrier to entry for creating DeFi applications.
+- **Gamified User Interface**: Interactive elements make the experience engaging and intuitive, suitable for users with varying technical backgrounds.
+- **Empowerment Through Accessibility**: Allows non-developers to create and deploy hooks, promoting innovation within the community.
 
-</details>
+## **How It Works**
 
----
+### **Hooks Overview**
+The hooks are designed to simplify the development process for applications on Pangolin DEX. By removing the need to bootstrap liquidity or attract users, developers can focus on building their core applications without the typical overhead.
 
-### Check Forge Installation
-*Ensure that you have correctly installed Foundry (Forge) and that it's up to date. You can update Foundry by running:*
+### **Gamified Interface**
+The user interface introduces gamified elements, making it not only functional but also fun and intuitive. With an extensive catalog of hooks, users can easily explore and select those that fit their needs, while entrepreneurs have a powerful tool for creating user-friendly DeFi solutions.
 
-```
-foundryup
-```
+## **Challenges**
+Developing for an unreleased protocol posed unique challenges. However, this project serves as a functional MVP that will seamlessly integrate with Pangolin V3 once it’s ready for production.
 
-## Set up
+## **Technologies**
+- **Solidity**
+- **Foundry**
+- **React + Next.js**
+- **Wagmi**
 
-*requires [foundry](https://book.getfoundry.sh)*
+## **Setup**
 
-```
-forge install
-forge test
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rafael-abuawad/pangolin-stimpack-hooks
+   cd pangolin-stimpack-hooks
+   ```
 
-### Local Development (Anvil)
+2. Install dependencies:
+   ```bash
+   forge install
+   ```
 
-Other than writing unit tests (recommended!), you can only deploy & test hooks on [anvil](https://book.getfoundry.sh/anvil/)
+3. Run the development server:
+   ```bash
+   anvil
+   ```
 
-```bash
-# start anvil, a local EVM chain
-anvil
+4. Compile and deploy the contracts:
+   ```bash
+   forge build
+   forge deploy
+   ```
 
-# in a new terminal
-forge script script/Anvil.s.sol \
-    --rpc-url http://localhost:8545 \
-    --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-    --broadcast
-```
-
-See [script/](script/) for hook deployment, pool creation, liquidity provision, and swapping.
-
----
-
-<details>
-<summary><h2>Troubleshooting</h2></summary>
-
-
-
-### *Permission Denied*
-
-When installing dependencies with `forge install`, Github may throw a `Permission Denied` error
-
-Typically caused by missing Github SSH keys, and can be resolved by following the steps [here](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) 
-
-Or [adding the keys to your ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent), if you have already uploaded SSH keys
-
-### Hook deployment failures
-
-Hook deployment failures are caused by incorrect flags or incorrect salt mining
-
-1. Verify the flags are in agreement:
-    * `getHookCalls()` returns the correct flags
-    * `flags` provided to `HookMiner.find(...)`
-2. Verify salt mining is correct:
-    * In **forge test**: the *deployer* for: `new Hook{salt: salt}(...)` and `HookMiner.find(deployer, ...)` are the same. This will be `address(this)`. If using `vm.prank`, the deployer will be the pranking address
-    * In **forge script**: the deployer must be the CREATE2 Proxy: `0x4e59b44847b379578588920cA78FbF26c0B4956C`
-        * If anvil does not have the CREATE2 deployer, your foundry may be out of date. You can update it with `foundryup`
-
-</details>
-
----
-
-Additional resources:
-
-[Uniswap v4 docs](https://docs.uniswap.org/contracts/v4/overview)
-
-[v4-periphery](https://github.com/uniswap/v4-periphery) contains advanced hook implementations that serve as a great reference
-
-[v4-core](https://github.com/uniswap/v4-core)
-
-[v4-by-example](https://v4-by-example.org)
-
+## **License**
+This project is licensed under the MIT License.

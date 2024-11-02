@@ -86,7 +86,7 @@ export const FactoryConfig = {
     },
     {
       type: "function",
-      name: "tag",
+      name: "getTag",
       inputs: [
         {
           name: "hook",
